@@ -21,10 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin("http://localhost")
 public class FileController {
 
     private final DatabaseFileService fileService;
@@ -39,13 +41,13 @@ public class FileController {
 
     @GetMapping("/status")
     public String getStatus() {
-        var secretToken = environment.getProperty("token.secret");
         var portNumber = environment.getProperty("local.server.port");
         logger.info("Call to Microservice Status");
         return "FileUploader microservice is up and running on port " + portNumber;
     }
 
-    @PostMapping("/upload")
+
+    @PostMapping(path ="/upload", consumes = {MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
         String message;
         try {
